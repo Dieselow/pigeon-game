@@ -20,9 +20,9 @@ public class Main {
         frame.add(gameBoard);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setMinimumSize(new Dimension(100, 100));
-        frame.setPreferredSize(new Dimension(200, 200));
+        frame.setPreferredSize(new Dimension(width, height));
         frame.setMinimumSize(new Dimension(100, 100));
-        frame.setLocation(50, 50);
+        frame.setLocation(500, 500);
         frame.pack();
         frame.setVisible(true);
     }
