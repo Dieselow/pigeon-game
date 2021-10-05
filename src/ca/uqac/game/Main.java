@@ -1,5 +1,6 @@
 package ca.uqac.game;
 
+import java.awt.*;
 import java.util.Scanner;
 import javax.swing.*;
 
@@ -14,10 +15,15 @@ public class Main {
         width = Integer.parseInt(scanner.nextLine());
         System.out.println("How much do you want pigeon in your game ?");
         pigeonNumber = Integer.parseInt(scanner.nextLine());
+        Board gameBoard = new Board(pigeonNumber, height, width);
         JFrame frame = new JFrame("Super Pigeon Game");
+        frame.add(gameBoard);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
-        frame.setResizable(false);
+        frame.setMinimumSize(new Dimension(100, 100));
+        frame.setPreferredSize(new Dimension(200, 200));
+        frame.setMinimumSize(new Dimension(100, 100));
+        frame.setLocation(50, 50);
+        frame.pack();
         frame.setVisible(true);
     }
 
