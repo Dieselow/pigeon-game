@@ -16,7 +16,10 @@ import java.util.Random;
 
 public class Board extends JPanel implements MouseListener, ActionListener {
     List<Pigeon> pigeons = new ArrayList<>();
-    private BufferedImage image;
+    List<PigeonFood> pigeonFoods = new ArrayList<>();
+    private BufferedImage pigeonImage;
+    private BufferedImage foodImage;
+
     private int sizeX;
     private int sizeY;
 
@@ -28,7 +31,8 @@ public class Board extends JPanel implements MouseListener, ActionListener {
             this.pigeons.add(new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY)));
         }
         try {
-            image = ImageIO.read(new File("src/resources/pigeon.png"));
+            pigeonImage = ImageIO.read(new File("src/resources/pigeon.png"));
+            foodImage = ImageIO.read(new File("src/resources/cookie.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,25 +40,31 @@ public class Board extends JPanel implements MouseListener, ActionListener {
 
     @Override
     public void paint(Graphics g) {
+        addMouseListener(this);
         Graphics2D graphics = (Graphics2D) g;
         for (Pigeon pigeon : this.pigeons) {
-            graphics.drawImage(image, pigeon.getPositionX(), pigeon.getPositionY(),50,50, null);
+            graphics.drawImage(pigeonImage, pigeon.getPositionX(), pigeon.getPositionY(),50,50, null);
+        }
+        synchronized (this){
+            for (PigeonFood food: this.pigeonFoods){
+                graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
+            }
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        repaint();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
+    public synchronized void mousePressed(MouseEvent e) {
+        this.pigeonFoods.add(new PigeonFood(e.getX(),e.getY()));
+        repaint();
     }
 
     @Override

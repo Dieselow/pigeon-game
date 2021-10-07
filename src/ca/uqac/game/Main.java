@@ -17,7 +17,6 @@ public class Main {
         pigeonNumber = Integer.parseInt(scanner.nextLine());
         Board gameBoard = new Board(pigeonNumber, height, width);
         JFrame frame = new JFrame("Super Pigeon Game");
-        frame.add(gameBoard);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setMinimumSize(new Dimension(100, 100));
         frame.setPreferredSize(new Dimension(width, height));
@@ -25,6 +24,7 @@ public class Main {
         frame.setLocation(500, 500);
         frame.pack();
         frame.setVisible(true);
+        frame.add(gameBoard);
     }
 
     public static void main(String[] args){
