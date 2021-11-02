@@ -28,7 +28,7 @@ public class Board extends JPanel implements MouseListener, ActionListener {
         this.sizeY = sizeY;
         Random rand = new Random(); //instance of random class
         for (int i = 0; i < pigeonNumbers; i++) {
-            this.pigeons.add(new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY)));
+            this.pigeons.add(new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY), this));
         }
         try {
             pigeonImage = ImageIO.read(new File("src/resources/pigeon.png"));
@@ -80,5 +80,9 @@ public class Board extends JPanel implements MouseListener, ActionListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    public List<PigeonFood> getPigeonFoods() {
+        return pigeonFoods;
     }
 }

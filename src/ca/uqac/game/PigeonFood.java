@@ -3,6 +3,7 @@ package ca.uqac.game;
 public class PigeonFood {
     private int xPosition;
     private int yPostion;
+    private boolean isRotten = false;
 
     public PigeonFood(int xPosition, int yPostion) {
         this.xPosition = xPosition;
@@ -23,5 +24,13 @@ public class PigeonFood {
 
     public void setyPostion(int yPostion) {
         this.yPostion = yPostion;
+    }
+
+    public boolean isRotten() {
+        return isRotten;
+    }
+
+    public void setRotten(){
+        this.isRotten = true;
     }
 }
