@@ -56,6 +56,9 @@ public class Board extends JPanel implements MouseListener, ActionListener {
         synchronized (this){
             for (PigeonFood food: this.pigeonFoods){
                 graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
+                if(new Random().nextInt(101) < 33){
+                    food.setRotten();
+                }
             }
         }
         for (Pigeon pigeon : this.pigeons) {
