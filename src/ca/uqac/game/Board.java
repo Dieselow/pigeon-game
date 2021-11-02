@@ -26,29 +26,40 @@ public class Board extends JPanel implements MouseListener, ActionListener {
     public Board(int pigeonNumbers, int sizeX, int sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+        addMouseListener(this);
         Random rand = new Random(); //instance of random class
-        for (int i = 0; i < pigeonNumbers; i++) {
-            this.pigeons.add(new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY), this));
-        }
         try {
             pigeonImage = ImageIO.read(new File("src/resources/pigeon.png"));
             foodImage = ImageIO.read(new File("src/resources/cookie.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.createTimer();
+        for (int i = 0; i < pigeonNumbers; i++) {
+            Pigeon pigeon = new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY), this);
+            this.pigeons.add(pigeon);
+            pigeon.startANewLife();
+        }
+    }
+
+    public int getSizeX() {
+        return sizeX;
+    }
+
+    public int getSizeY() {
+        return sizeY;
     }
 
     @Override
     public void paint(Graphics g) {
-        addMouseListener(this);
         Graphics2D graphics = (Graphics2D) g;
-        for (Pigeon pigeon : this.pigeons) {
-            graphics.drawImage(pigeonImage, pigeon.getPositionX(), pigeon.getPositionY(),50,50, null);
-        }
         synchronized (this){
             for (PigeonFood food: this.pigeonFoods){
                 graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
             }
+        }
+        for (Pigeon pigeon : this.pigeons) {
+            graphics.drawImage(pigeonImage, pigeon.getPositionX(), pigeon.getPositionY(),50,50, null);
         }
     }
 
@@ -62,9 +73,8 @@ public class Board extends JPanel implements MouseListener, ActionListener {
     }
 
     @Override
-    public synchronized void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
         this.pigeonFoods.add(new PigeonFood(e.getX(),e.getY()));
-        repaint();
     }
 
     @Override
@@ -82,7 +92,15 @@ public class Board extends JPanel implements MouseListener, ActionListener {
 
     }
 
-    public List<PigeonFood> getPigeonFoods() {
-        return pigeonFoods;
+    public synchronized List<PigeonFood> getPigeonFoods() {
+        return this.pigeonFoods;
+    }
+    private void createTimer(){
+        new Timer(1, this).start();
+    }
+
+    public synchronized void removeFood(PigeonFood food){
+        this.pigeonFoods.remove(food);
+        repaint();
     }
 }
