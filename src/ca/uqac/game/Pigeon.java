@@ -3,16 +3,18 @@ package ca.uqac.game;
 import java.util.Random;
 
 public class Pigeon implements Runnable {
+    private int id;
     private int positionX;
     private int positionY;
     private final Board board;
     private Thread piegonThread;
     private static final int speed = 10;
 
-    public Pigeon(int positionX, int positionY, Board board) {
+    public Pigeon(int positionX, int positionY, Board board, int id) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.board = board;
+        this.id = id;
     }
 
     public int getPositionX() {
@@ -30,11 +32,13 @@ public class Pigeon implements Runnable {
                 Random randomChance = new Random();
                 if (this.board.getPigeonFoods().size() > 0) {
                     PigeonFood closestFood = this.getClosestFood(this.board);
-                    if (this.getPositionY() == closestFood.getyPostion() && this.getPositionX() == closestFood.getxPosition()) {
-                        this.board.removeFood(closestFood);
-                        System.out.println("Food eaten");
-                    } else {
-                        this.moveToward(closestFood.getxPosition(), closestFood.getyPostion());
+                    if (closestFood != null){
+                        if (this.getPositionY() == closestFood.getyPostion() && this.getPositionX() == closestFood.getxPosition()) {
+                            this.board.removeFood(closestFood);
+                            System.out.println("Food eaten by Pigeon " + id);
+                        } else {
+                            this.moveToward(closestFood.getxPosition(), closestFood.getyPostion());
+                        }
                     }
                 } else if (randomChance.nextInt(101) < randomChance.nextInt(101)) {
                     this.randomMove();

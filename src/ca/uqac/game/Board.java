@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Board extends JPanel implements MouseListener, ActionListener {
     List<Pigeon> pigeons = new ArrayList<>();
@@ -36,7 +37,7 @@ public class Board extends JPanel implements MouseListener, ActionListener {
         }
         this.createTimer();
         for (int i = 0; i < pigeonNumbers; i++) {
-            Pigeon pigeon = new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY), this);
+            Pigeon pigeon = new Pigeon(rand.nextInt(sizeX), rand.nextInt(sizeY), this,i);
             this.pigeons.add(pigeon);
             pigeon.startANewLife();
         }
@@ -55,10 +56,10 @@ public class Board extends JPanel implements MouseListener, ActionListener {
         Graphics2D graphics = (Graphics2D) g;
         synchronized (this){
             for (PigeonFood food: this.pigeonFoods){
-                graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
-                if(new Random().nextInt(101) < 33){
+                if (TimeUnit.SECONDS.convert(System.nanoTime() - food.getLifeTime() , TimeUnit.NANOSECONDS) > 30 ){ // set food is rotten if its lifetime > 30 seconds
                     food.setRotten();
                 }
+                graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
             }
         }
         for (Pigeon pigeon : this.pigeons) {
@@ -77,7 +78,7 @@ public class Board extends JPanel implements MouseListener, ActionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        this.pigeonFoods.add(new PigeonFood(e.getX(),e.getY()));
+        this.pigeonFoods.add(new PigeonFood(e.getX(),e.getY(),System.nanoTime()));
     }
 
     @Override

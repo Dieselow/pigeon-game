@@ -4,10 +4,12 @@ public class PigeonFood {
     private int xPosition;
     private int yPostion;
     private boolean isRotten = false;
+    private long lifeTime;
 
-    public PigeonFood(int xPosition, int yPostion) {
+    public PigeonFood(int xPosition, int yPostion,long lifeTime) {
         this.xPosition = xPosition;
         this.yPostion = yPostion;
+        this.lifeTime = lifeTime;
     }
 
     public int getxPosition() {
@@ -32,5 +34,9 @@ public class PigeonFood {
 
     public void setRotten(){
         this.isRotten = true;
+    }
+
+    public long getLifeTime() {
+        return lifeTime;
     }
 }
