@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +51,41 @@ public class Board extends JPanel implements MouseListener, ActionListener {
     public int getSizeY() {
         return sizeY;
     }
+    public static Image newBrightness( Image source, float brightnessPercentage ) {
+
+        BufferedImage bi = new BufferedImage(
+                source.getWidth( null ),
+                source.getHeight( null ),
+                BufferedImage.TYPE_INT_ARGB );
+
+        int[] pixel = { 0, 0, 0, 0 };
+        float[] hsbvals = { 0, 0, 0 };
+
+        bi.getGraphics().drawImage( source, 0, 0, null );
+
+        // recalculare every pixel, changing the brightness
+        for ( int i = 0; i < bi.getHeight(); i++ ) {
+            for ( int j = 0; j < bi.getWidth(); j++ ) {
+
+                // get the pixel data
+                bi.getRaster().getPixel( j, i, pixel );
+
+                // converts its data to hsb to change brightness
+                Color.RGBtoHSB( pixel[0], pixel[1], pixel[2], hsbvals );
+
+                // create a new color with the changed brightness
+                Color c = new Color( Color.HSBtoRGB( hsbvals[0], hsbvals[1], hsbvals[2] * brightnessPercentage ) );
+
+                // set the new pixel
+                bi.getRaster().setPixel( j, i, new int[]{ c.getRed(), c.getGreen(), c.getBlue(), pixel[3] } );
+
+            }
+
+        }
+
+        return bi;
+
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -58,8 +94,13 @@ public class Board extends JPanel implements MouseListener, ActionListener {
             for (PigeonFood food: this.pigeonFoods){
                 if (TimeUnit.SECONDS.convert(System.nanoTime() - food.getLifeTime() , TimeUnit.NANOSECONDS) > 30 ){ // set food is rotten if its lifetime > 30 seconds
                     food.setRotten();
+                    graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
+                    continue;
                 }
-                graphics.drawImage(foodImage, food.getxPosition(), food.getyPostion(),50,50, null);
+                float scaleFactor = 1.3f; // How much brighter. 1.3 means 30% brighter
+                RescaleOp op = new RescaleOp(scaleFactor, 0, null);
+                Image healthyFood = op.filter(foodImage, null);;
+                graphics.drawImage(healthyFood, food.getxPosition(), food.getyPostion(),50,50, null);
             }
         }
         for (Pigeon pigeon : this.pigeons) {

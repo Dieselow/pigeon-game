@@ -40,6 +40,9 @@ public class Pigeon implements Runnable {
                             this.moveToward(closestFood.getxPosition(), closestFood.getyPostion());
                         }
                     }
+                    else if (randomChance.nextInt(101) < randomChance.nextInt(16)) {
+                        this.randomMove();
+                    }
                 } else if (randomChance.nextInt(101) < randomChance.nextInt(101)) {
                     this.randomMove();
                 }
